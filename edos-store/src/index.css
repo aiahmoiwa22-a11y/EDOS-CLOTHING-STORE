@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   THEME: "Midnight Gold" — custom theme (theme-factory)
+   Black #0a0905 · Gold #c9a84c · Cream #f5ede0 · Warm brown
+   Fonts: Cormorant Garamond (display) + Jost (body)
+   Change these tokens to re-skin the whole site.
+   ============================================================ */
+@layer base {
+  :root {
+    --background: 43 33% 3%;
+    --foreground: 37 46% 91%;
+    --card: 46 22% 8%;
+    --card-foreground: 37 46% 91%;
+    --popover: 46 22% 7%;
+    --popover-foreground: 37 46% 91%;
+    --primary: 44 54% 54%;
+    --primary-foreground: 43 33% 4%;
+    --secondary: 46 18% 12%;
+    --secondary-foreground: 37 46% 91%;
+    --muted: 46 18% 12%;
+    --muted-foreground: 40 12% 62%;
+    --accent: 46 22% 14%;
+    --accent-foreground: 44 70% 66%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 44 35% 22%;
+    --input: 44 30% 20%;
+    --ring: 44 54% 54%;
+    --radius: 0.75rem;
+    --gold-light: 44 70% 66%;
+    --gold-dim: 44 49% 33%;
+    --cream: 37 46% 91%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { @apply font-display; }
+  ::selection { background: hsl(var(--primary) / 0.35); }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-[0.25em] text-primary;
+  }
+  .section-title {
+    @apply font-display text-4xl font-semibold leading-[1.1] md:text-5xl;
+  }
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 md:px-8;
+  }
+  .gold-rule {
+    @apply h-px w-12 bg-primary;
+  }
+  .lux-card {
+    @apply rounded-2xl border border-border bg-card transition-all duration-300;
+  }
+  .lux-card-hover {
+    @apply hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.55)];
+  }
+  .pattern-dots {
+    background-image: radial-gradient(hsl(var(--primary) / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
+
+/* scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
