@@ -20,7 +20,8 @@ export default function About() {
             {stats.map((s) => (<div key={s.label}><p className="font-display text-4xl font-semibold text-primary">{s.value}</p><p className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p></div>))}
           </div>
         </Reveal>
-        <Reveal delay={120}><img src={images.seamstress} alt="A seamstress sewing a patterned garment" className="aspect-[4/3] w-full rounded-2xl border border-border object-cover" /></Reveal>
+        <Reveal delay={120}>{/* OWNER PHOTO (same file as Home: src/assets/images/tailor.jpg) */}
+          <img src={images.tailor} alt="Eldred Conteh, founder and owner of Edo's Clothing & Design" className="aspect-[4/3] w-full rounded-2xl border border-border object-cover object-[50%_30%]" /></Reveal>
       </section>
 
       <section className="border-y border-border bg-card/40 py-20">
