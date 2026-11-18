@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
+import { useTheme } from "@/context/ThemeContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppIcon } from "@/components/icons";
@@ -19,6 +20,7 @@ function ScrollToTop() {
 }
 
 export function Layout() {
+  const { theme } = useTheme();
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
@@ -34,7 +36,7 @@ export function Layout() {
       >
         <WhatsAppIcon className="h-7 w-7" />
       </a>
-      <Toaster theme="dark" position="top-center" richColors />
+      <Toaster theme={theme} position="top-center" richColors />
     </div>
   );
 }

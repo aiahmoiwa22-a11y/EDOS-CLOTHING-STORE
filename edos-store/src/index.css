@@ -36,6 +36,46 @@
   }
 }
 
+
+/* ============================================================
+   LIGHT MODE — applied when <html data-theme="light"> (set by the
+   sun/moon button). Edit these colours to restyle light mode.
+   ============================================================ */
+html[data-theme="light"] {
+  --background: 37 40% 96%;
+  --foreground: 43 33% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 43 33% 8%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 43 33% 8%;
+  --primary: 40 62% 34%;
+  --primary-foreground: 37 46% 96%;
+  --secondary: 37 30% 90%;
+  --secondary-foreground: 43 33% 10%;
+  --muted: 37 30% 91%;
+  --muted-foreground: 40 12% 36%;
+  --accent: 37 35% 88%;
+  --accent-foreground: 40 62% 28%;
+  --border: 38 25% 80%;
+  --input: 38 25% 78%;
+  --ring: 40 62% 34%;
+  --gold-light: 42 62% 40%;
+  --cream: 37 46% 91%;
+  color-scheme: light;
+}
+html[data-theme="light"] .lux-card-hover { --tw-shadow-color: rgba(60, 40, 0, 0.18); }
+
+/* Sections that must stay dark in both modes (e.g. the hero photo) */
+.force-dark {
+  --background: 43 33% 3%;
+  --foreground: 37 46% 91%;
+  --primary: 44 54% 54%;
+  --primary-foreground: 43 33% 4%;
+  --muted-foreground: 40 12% 62%;
+  --border: 44 35% 22%;
+  color: hsl(var(--foreground));
+}
+
 @layer base {
   * { @apply border-border; }
   html { scroll-behavior: smooth; }

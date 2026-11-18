@@ -1,8 +1,9 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ChevronDown, Menu, Search, ShoppingBag } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { CurrencyToggle } from "@/components/CurrencyToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useCart } from "@/context/CartContext";
 import { categories } from "@/data/products";
 import { cn } from "@/lib/utils";
@@ -18,17 +19,9 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 export function Navbar() {
   const { count } = useCart();
   const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [q, setQ] = useState("");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   function onSearch(e: FormEvent) {
     e.preventDefault();
@@ -38,7 +31,7 @@ export function Navbar() {
   }
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", scrolled ? "border-b border-border bg-background/90 backdrop-blur-md" : "bg-gradient-to-b from-background/80 to-transparent")}>
+    <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", "border-b border-border bg-background/90 backdrop-blur-md")}>
       <div className="container-x flex h-[76px] items-center justify-between gap-4">
         <Logo />
 
@@ -63,6 +56,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-1.5">
           <CurrencyToggle className="hidden sm:inline-flex" />
+          <ThemeToggle />
           <Button variant="ghost" size="icon" aria-label="Search products" onClick={() => setSearchOpen(true)} className="text-muted-foreground hover:text-primary">
             <Search className="h-[18px] w-[18px]" />
           </Button>

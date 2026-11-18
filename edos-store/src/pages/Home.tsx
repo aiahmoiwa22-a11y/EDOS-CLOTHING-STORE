@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <>
       {/* HERO — full-width background photo (images.heroBg in src/data/content.ts), big bold text on the left */}
-      <section className="relative isolate overflow-hidden pt-[76px]">
+      <section className="force-dark relative isolate overflow-hidden pt-[76px]">
         <img src={images.heroBg} alt="Edo's Clothing & Design showroom with finished African outfits" className="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_35%]" />
         {/* dark overlay so the white text is easy to read — make the numbers bigger for a darker photo */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/90 via-black/65 to-black/15" />

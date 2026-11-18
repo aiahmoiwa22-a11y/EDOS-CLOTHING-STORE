@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { CartProvider } from "@/context/CartContext";
@@ -12,7 +13,7 @@ import { AdminProvider } from "@/context/AdminContext";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HashRouter>
-      <CurrencyProvider>
+      <ThemeProvider><CurrencyProvider>
         <ProductsProvider>
           <CartProvider>
             <AdminProvider>
@@ -20,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
             </AdminProvider>
           </CartProvider>
         </ProductsProvider>
-      </CurrencyProvider>
+      </CurrencyProvider></ThemeProvider>
     </HashRouter>
   </StrictMode>,
 );
