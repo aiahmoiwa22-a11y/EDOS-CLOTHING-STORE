@@ -106,7 +106,8 @@ export default function Home() {
       <section className="container-x grid items-center gap-12 py-20 md:py-28 lg:grid-cols-2 lg:gap-20">
         <Reveal>
           <div className="relative">
-            <img src={images.tailor} alt="Our tailor fitting a lace dress on a mannequin" loading="lazy" className="aspect-[4/3.2] w-full rounded-2xl border border-border object-cover" />
+            {/* OWNER PHOTO — replace src/assets/images/tailor.jpg to change it */}
+            <img src={images.tailor} alt="Eldred Conteh, founder and owner of Edo's Clothing & Design" loading="lazy" className="aspect-[4/4.6] w-full rounded-2xl border border-border object-cover object-top" />
             <div className="absolute -bottom-6 right-4 hidden rounded-xl border border-border bg-card p-5 shadow-xl sm:block">
               <p className="font-display text-4xl font-semibold text-primary">8+</p>
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Years of tailoring</p>
@@ -117,8 +118,12 @@ export default function Home() {
           <p className="eyebrow mb-3">About us</p>
           <h2 className="section-title">Celebrating African <span className="text-primary">heritage</span> through fashion</h2>
           <div className="gold-rule my-6" />
+          {/* ABOUT DESCRIPTION — edit the text inside these two paragraphs */}
           <p className="leading-relaxed text-muted-foreground">
-            At Edos Clothing &amp; Design, we blend tradition with style to create elegant African attire for every age and occasion. Our mission is to deliver quality, creativity and confidence in every stitch.
+            At Edo&rsquo;s Clothing &amp; Design, we blend tradition with style to create elegant African attire for every occasion. From senator wear and agbada to aso ebi, boubou and children&rsquo;s outfits, every piece is designed with care and sewn to your exact measurements.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Whether you choose from our ready designs or bring your own idea, we work with you from fabric to final fitting, so you walk out confident and looking your best. Style, elegance, you.
           </p>
           <ul className="mt-7 grid gap-3 sm:grid-cols-2">
             {promises.map((p) => (
