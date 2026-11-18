@@ -1,9 +1,11 @@
 import hero from "@/assets/images/hero.jpg";
+// HERO BACKGROUND (home page, top) — replace src/assets/images/hero-bg.jpg to change it.
+import heroBg from "@/assets/images/hero-bg.jpg";
 import tailor from "@/assets/images/tailor.jpg";
 import seamstress from "@/assets/images/seamstress.jpg";
 import { products } from "./products";
 
-export const images = { hero, tailor, seamstress };
+export const images = { hero, heroBg, tailor, seamstress };
 
 export const testimonials = [
   {

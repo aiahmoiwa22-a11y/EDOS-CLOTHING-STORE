@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
+// LOGO IMAGE — to change the logo, replace src/assets/images/logo-emblem.png (keep the same name).
+import emblem from "@/assets/images/logo-emblem.png";
 
-/** Placeholder logo mark — swap for the real logo file when the owner has one. */
+/** Header + footer logo: crown "E" emblem + brand name. Edit the two text lines below to rename. */
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link to="/" className={`group flex items-center gap-3 ${className}`} aria-label="Edos Clothing & Design — home">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/60 bg-gradient-to-br from-primary/20 to-transparent font-display text-xl font-bold text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-        E
-      </span>
+    <Link to="/" className={`group flex items-center gap-3 ${className}`} aria-label="Edo's Clothing & Design — home">
+      <img src={emblem} alt="" className="h-12 w-auto" />
       <span className="leading-none">
-        <span className="block font-display text-2xl font-semibold tracking-[0.12em] text-primary">EDOS</span>
-        <span className="mt-1 block text-[9px] uppercase tracking-[0.28em] text-muted-foreground">Clothing &amp; Design</span>
+        {/* BRAND NAME (line 1) */}
+        <span className="block font-display text-3xl font-bold tracking-wide text-foreground">Edo&rsquo;s</span>
+        {/* TAGLINE (line 2) */}
+        <span className="mt-1 block text-[9px] uppercase tracking-[0.28em] text-primary">Clothing &amp; Design</span>
       </span>
     </Link>
   );

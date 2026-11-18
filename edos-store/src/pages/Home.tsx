@@ -22,28 +22,28 @@ export default function Home() {
 
   return (
     <>
-      {/* HERO */}
+      {/* HERO — full-width background photo (images.heroBg in src/data/content.ts), big bold text on the left */}
       <section className="relative isolate overflow-hidden pt-[76px]">
-        <div className="pattern-dots absolute inset-0 -z-10" />
-        <div className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[58%]">
-          <img src={images.hero} alt="A couple dressed in gold-embroidered African attire" className="h-full w-full object-cover object-[60%_20%]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/10 lg:via-background/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30" />
-        </div>
-        <div className="container-x flex min-h-[600px] md:min-h-[660px] items-center py-16">
-          <div className="max-w-xl">
-            <p className="eyebrow mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-1.5 backdrop-blur">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" /> Luxury African fashion
-            </p>
-            <h1 className="font-display text-5xl font-semibold leading-[1.02] sm:text-6xl lg:text-7xl">
-              African Heritage.<br />Tailored to <em className="text-primary">Perfection.</em>
+        <img src={images.heroBg} alt="Edo's Clothing & Design showroom with finished African outfits" className="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_35%]" />
+        {/* dark overlay so the white text is easy to read — make the numbers bigger for a darker photo */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/90 via-black/65 to-black/15" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-background via-transparent to-black/30" />
+        <div className="container-x flex min-h-[640px] items-center py-20 md:min-h-[760px]">
+          <div className="max-w-2xl">
+            {/* SMALL LINE ABOVE THE TITLE */}
+            <p className="eyebrow mb-6">Style &middot; Elegance &middot; You</p>
+            {/* MAIN TITLE — big and bold. Edit the words here. */}
+            <h1 className="font-display text-6xl font-bold uppercase leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
+              Wear your<br /><span className="text-primary">heritage.</span>
             </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-              Premium African attire for men, women, children and every special occasion — ready to wear, or sewn just for you.
+            {/* SUBTITLE */}
+            <p className="mt-7 max-w-md text-base leading-relaxed text-foreground/80 md:text-lg">
+              Premium African attire for men, women, children and every occasion &mdash; ready to wear, or sewn just for you.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="h-12 px-8 text-xs font-semibold uppercase tracking-[0.16em]"><Link to="/shop">Shop Collection</Link></Button>
-              <Button asChild size="lg" variant="outline" className="h-12 border-primary px-8 text-xs font-semibold uppercase tracking-[0.16em] text-primary hover:bg-primary hover:text-primary-foreground"><Link to="/custom-sewing">Book a Design</Link></Button>
+            {/* BUTTONS */}
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Button asChild size="lg" className="h-13 px-9 text-xs font-bold uppercase tracking-[0.18em]"><Link to="/shop">Shop Collection</Link></Button>
+              <Button asChild size="lg" variant="outline" className="h-13 border-foreground/70 bg-transparent px-9 text-xs font-bold uppercase tracking-[0.18em] text-foreground hover:bg-foreground hover:text-background"><Link to="/custom-sewing">Book a Design</Link></Button>
             </div>
           </div>
         </div>
