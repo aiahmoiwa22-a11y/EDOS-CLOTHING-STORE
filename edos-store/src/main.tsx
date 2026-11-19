@@ -6,6 +6,7 @@ import App from "./App";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ProductsProvider } from "@/context/ProductsContext";
+import { CategoriesProvider } from "@/context/CategoriesContext";
 import { CartProvider } from "@/context/CartContext";
 import { AdminProvider } from "@/context/AdminContext";
 
@@ -14,13 +15,13 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HashRouter>
       <ThemeProvider><CurrencyProvider>
-        <ProductsProvider>
+        <ProductsProvider><CategoriesProvider>
           <CartProvider>
             <AdminProvider>
               <App />
             </AdminProvider>
           </CartProvider>
-        </ProductsProvider>
+        </CategoriesProvider></ProductsProvider>
       </CurrencyProvider></ThemeProvider>
     </HashRouter>
   </StrictMode>,

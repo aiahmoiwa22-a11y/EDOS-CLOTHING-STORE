@@ -52,3 +52,10 @@ export function fileToResizedDataUrl(file: File, maxSize = 900, quality = 0.82):
     reader.readAsDataURL(file);
   });
 }
+
+/** Shrink an uploaded photo to a JPEG file ready to upload to the database storage. */
+export async function fileToResizedBlob(file: File, maxSize = 1200, quality = 0.85): Promise<Blob> {
+  const dataUrl = await fileToResizedDataUrl(file, maxSize, quality);
+  const res = await fetch(dataUrl);
+  return res.blob();
+}

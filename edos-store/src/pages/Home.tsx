@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProductCard } from "@/components/ProductCard";
-import { categories } from "@/data/products";
+import { AnimatedHeadline } from "@/components/AnimatedHeadline";
+import { useCategories } from "@/context/CategoriesContext";
 import { images, process, promises, stats, testimonials } from "@/data/content";
 import { useProducts } from "@/context/ProductsContext";
 
@@ -17,6 +18,7 @@ const strip = [
 
 export default function Home() {
   const { visible } = useProducts();
+  const { categories } = useCategories();
   const popular = visible.filter((p) => p.popular).slice(0, 4);
   const featured = visible.filter((p) => !p.popular).slice(0, 4);
 
@@ -24,26 +26,28 @@ export default function Home() {
     <>
       {/* HERO — full-width background photo (images.heroBg in src/data/content.ts), big bold text on the left */}
       <section className="force-dark relative isolate overflow-hidden pt-[76px]">
-        <img src={images.heroBg} alt="Edo's Clothing & Design showroom with finished African outfits" className="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_35%]" />
+        <img src={images.heroBg} alt="Edo's Clothing & Design showroom with finished African outfits" className="hero-zoom absolute inset-0 -z-20 h-full w-full object-cover object-[50%_35%]" />
         {/* dark overlay so the white text is easy to read — make the numbers bigger for a darker photo */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/90 via-black/65 to-black/15" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-background via-transparent to-black/30" />
-        <div className="container-x flex min-h-[640px] items-center py-20 md:min-h-[760px]">
-          <div className="max-w-2xl">
+        <div className="container-x flex min-h-[680px] items-center py-20 md:min-h-[820px]">
+          <div className="w-full">
             {/* SMALL LINE ABOVE THE TITLE */}
-            <p className="eyebrow mb-6">Style &middot; Elegance &middot; You</p>
-            {/* MAIN TITLE — big and bold. Edit the words here. */}
-            <h1 className="font-display text-6xl font-bold uppercase leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
-              Wear your<br /><span className="text-primary">heritage.</span>
-            </h1>
+            <p className="hero-eyebrow eyebrow mb-7 text-sm md:text-base">Style &middot; Elegance &middot; You</p>
+            {/* MAIN TITLE — big, bold and animated. Change the words in `lines` (a gold line is drawn in gold). */}
+            <AnimatedHeadline
+              className="font-display text-[clamp(3.6rem,13.5vw,10.5rem)] font-bold uppercase leading-[0.88] tracking-tight"
+              lines={[{ words: ["Wear", "your"] }, { words: ["heritage."], gold: true }]}
+            />
+            <div className="hero-rule my-8 h-[3px] bg-primary" />
             {/* SUBTITLE */}
-            <p className="mt-7 max-w-md text-base leading-relaxed text-foreground/80 md:text-lg">
+            <p className="hero-fade max-w-xl text-lg leading-relaxed text-foreground/85 md:text-2xl" style={{ animationDelay: "1.5s" }}>
               Premium African attire for men, women, children and every occasion &mdash; ready to wear, or sewn just for you.
             </p>
             {/* BUTTONS */}
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="h-13 px-9 text-xs font-bold uppercase tracking-[0.18em]"><Link to="/shop">Shop Collection</Link></Button>
-              <Button asChild size="lg" variant="outline" className="h-13 border-foreground/70 bg-transparent px-9 text-xs font-bold uppercase tracking-[0.18em] text-foreground hover:bg-foreground hover:text-background"><Link to="/custom-sewing">Book a Design</Link></Button>
+            <div className="hero-fade mt-10 flex flex-wrap gap-4" style={{ animationDelay: "1.8s" }}>
+              <Button asChild size="lg" className="h-14 px-10 text-sm font-bold uppercase tracking-[0.18em]"><Link to="/shop">Shop Collection</Link></Button>
+              <Button asChild size="lg" variant="outline" className="h-14 border-foreground/70 bg-transparent px-10 text-sm font-bold uppercase tracking-[0.18em] text-foreground hover:bg-foreground hover:text-background"><Link to="/custom-sewing">Book a Design</Link></Button>
             </div>
           </div>
         </div>

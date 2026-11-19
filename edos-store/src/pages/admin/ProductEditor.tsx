@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { categories, type CategoryId, type Product } from "@/data/products";
 import { site } from "@/data/site";
-import { fileToResizedDataUrl } from "@/lib/storage";
+import { preparePhoto } from "@/lib/photos";
+import { isLive } from "@/lib/supabase";
 import { useProducts } from "@/context/ProductsContext";
 
 type Draft = {
@@ -44,12 +45,12 @@ export function ProductEditor({ open, product, onClose }: { open: boolean; produ
   async function onFile(file?: File) {
     if (!file) return;
     setBusy(true);
-    try { set("image", await fileToResizedDataUrl(file)); }
+    try { set("image", await preparePhoto(file)); }
     catch (e) { toast.error(e instanceof Error ? e.message : "Could not use that photo."); }
     finally { setBusy(false); if (fileRef.current) fileRef.current.value = ""; }
   }
 
-  function save() {
+  async function save() {
     const err: Record<string, string> = {};
     const usd = Number(d.price); const sle = Number(d.priceLeones);
     if (!d.name.trim()) err.name = "Name is required";
@@ -66,18 +67,20 @@ export function ProductEditor({ open, product, onClose }: { open: boolean; produ
       description: d.description.trim(), fabrics: list(d.fabrics), sizes: list(d.sizes), leadTime: d.leadTime.trim() || "7–10 days",
       badge: d.badge === "none" ? undefined : (d.badge as Product["badge"]), hidden: d.hidden, popular: d.popular, image: d.image,
     };
+    setBusy(true);
     const ok = product
-      ? updateProduct(product.id, data)
-      : addProduct({ ...data, rating: 5, reviews: 0 }).ok;
-    if (!ok) { toast.error("Could not save — the browser's storage is full. Try a smaller photo or remove unused products."); return; }
+      ? await updateProduct(product.id, data)
+      : (await addProduct({ ...data, rating: 5, reviews: 0 })).ok;
+    setBusy(false);
+    if (!ok) { toast.error(isLive ? "Could not save — check your connection and that you are signed in as admin." : "Could not save — the browser's storage is full. Try a smaller photo or remove unused products."); return; }
     toast.success(product ? "Product updated" : "Product added");
     onClose();
   }
 
-  function remove() {
+  async function remove() {
     if (!product) return;
-    if (!window.confirm(`Delete “${product.name}” from the shop? You can restore sample products with “Reset catalogue”.`)) return;
-    deleteProduct(product.id);
+    if (!window.confirm(`Delete “${product.name}” from the shop?${isLive ? " This cannot be undone — you can hide it instead." : ""}`)) return;
+    if (!(await deleteProduct(product.id))) { toast.error("Could not delete the product."); return; }
     toast.success("Product deleted");
     onClose();
   }
@@ -146,7 +149,7 @@ export function ProductEditor({ open, product, onClose }: { open: boolean; produ
 
         <DialogFooter className="gap-2 sm:justify-between">
           {product ? <Button type="button" variant="ghost" className="text-destructive hover:text-destructive" onClick={remove}><Trash2 className="mr-2 h-4 w-4" /> Delete</Button> : <span />}
-          <div className="flex gap-2"><Button type="button" variant="outline" onClick={onClose}>Cancel</Button><Button type="button" onClick={save}>{product ? "Save changes" : "Add product"}</Button></div>
+          <div className="flex gap-2"><Button type="button" variant="outline" onClick={onClose}>Cancel</Button><Button type="button" disabled={busy} onClick={save}>{busy ? "Saving…" : product ? "Save changes" : "Add product"}</Button></div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

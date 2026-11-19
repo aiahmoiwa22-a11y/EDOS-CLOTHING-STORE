@@ -123,3 +123,41 @@ html[data-theme="light"] .lux-card-hover { --tw-shadow-color: rgba(60, 40, 0, 0.
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ============================================================
+   HERO ANIMATION (Home page title) — see AnimatedHeadline.tsx
+   ============================================================ */
+.hero-line { display: block; overflow: hidden; padding: 0.04em 0.06em 0.12em; margin: -0.04em -0.06em -0.12em; }
+.hero-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(115%) rotate(7deg);
+  animation: heroRise 1s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+  animation-delay: calc(0.25s + var(--i, 0) * var(--step, 55ms));
+}
+/* gold word: rises, then a lighter-gold wave runs across the letters again and again */
+.hero-gold {
+  color: hsl(var(--primary));
+  animation: heroRise 1s cubic-bezier(0.2, 0.85, 0.25, 1) forwards, heroGoldWave 3.6s ease-in-out infinite;
+  animation-delay: calc(0.25s + var(--i, 0) * var(--step, 55ms)), calc(2.2s + var(--i, 0) * 140ms);
+}
+.hero-eyebrow { opacity: 0; animation: heroFade 0.9s ease-out 0.1s forwards, heroTrack 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards; }
+.hero-fade { opacity: 0; transform: translateY(24px); animation: heroFadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.hero-rule { width: 0; animation: heroRule 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 1.1s forwards; }
+.hero-zoom { animation: heroZoom 22s ease-out forwards; }
+
+@keyframes heroRise { to { opacity: 1; transform: translateY(0) rotate(0); } }
+@keyframes heroGoldWave {
+  0%, 55%, 100% { color: hsl(var(--primary)); text-shadow: none; }
+  25% { color: hsl(var(--gold-light)); text-shadow: 0 0 28px hsl(var(--primary) / 0.55); }
+}
+@keyframes heroFade { to { opacity: 1; } }
+@keyframes heroTrack { from { letter-spacing: 0.7em; } to { letter-spacing: 0.28em; } }
+@keyframes heroFadeUp { to { opacity: 1; transform: none; } }
+@keyframes heroRule { to { width: 7rem; } }
+@keyframes heroZoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-letter, .hero-gold, .hero-eyebrow, .hero-fade, .hero-rule, .hero-zoom { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .hero-rule { width: 7rem; }
+}
