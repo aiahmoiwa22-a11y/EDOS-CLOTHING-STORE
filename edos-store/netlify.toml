@@ -1,0 +1,15 @@
+# Netlify build settings for Edo's Clothing & Design.
+# In Netlify set "Base directory" to: edos-store   (this file lives there)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The site uses #/ links, so every address works without extra rules.
+# Keep the browser from holding on to old versions of the page.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
