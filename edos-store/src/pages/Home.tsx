@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProductCard } from "@/components/ProductCard";
-import { categories } from "@/data/products";
+import { useCategories } from "@/context/CategoriesContext";
 import { images, process, promises, stats, testimonials } from "@/data/content";
 import { useProducts } from "@/context/ProductsContext";
 
@@ -17,6 +17,7 @@ const strip = [
 
 export default function Home() {
   const { visible } = useProducts();
+  const { categories } = useCategories();
   const popular = visible.filter((p) => p.popular).slice(0, 4);
   const featured = visible.filter((p) => !p.popular).slice(0, 4);
 

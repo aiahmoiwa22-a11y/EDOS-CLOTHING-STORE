@@ -14,6 +14,7 @@ import { useAdmin } from "@/context/AdminContext";
 import { useProducts } from "@/context/ProductsContext";
 import { getCategory, type Product } from "@/data/products";
 import { isLive } from "@/lib/supabase";
+import { CategoryPhotos } from "@/pages/admin/CategoryPhotos";
 import { deleteOrder, loadOrders, updateOrderStatus, type OrderKind, type OrderRecord, type OrderStatus } from "@/lib/orders";
 
 /** A price box that saves when you leave it or press Enter. */
@@ -96,6 +97,7 @@ export default function AdminDashboard() {
         <Tabs defaultValue="products">
           <TabsList className="mb-6">
             <TabsTrigger value="products">Products &amp; prices ({all.length})</TabsTrigger>
+            <TabsTrigger value="categories">Category photos</TabsTrigger>
             <TabsTrigger value="orders">Orders &amp; requests{newCount > 0 && <span className="ml-2 rounded-full bg-primary px-1.5 text-[10px] font-bold text-primary-foreground">{newCount}</span>}</TabsTrigger>
           </TabsList>
 
@@ -128,6 +130,8 @@ export default function AdminDashboard() {
               </table>
             </div>
           </TabsContent>
+
+          <TabsContent value="categories"><CategoryPhotos /></TabsContent>
 
           <TabsContent value="orders">
             <div className="mb-4 flex justify-end"><Button variant="outline" size="sm" onClick={() => { void refresh(); }}><RotateCcw className="mr-2 h-4 w-4" /> Refresh orders</Button></div>

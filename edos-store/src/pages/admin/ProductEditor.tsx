@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { categories, type CategoryId, type Product } from "@/data/products";
 import { site } from "@/data/site";
-import { fileToResizedBlob, fileToResizedDataUrl } from "@/lib/storage";
-import { isLive, supabase, PHOTO_BUCKET } from "@/lib/supabase";
+import { preparePhoto } from "@/lib/photos";
+import { isLive } from "@/lib/supabase";
 import { useProducts } from "@/context/ProductsContext";
 
 type Draft = {
@@ -45,18 +45,7 @@ export function ProductEditor({ open, product, onClose }: { open: boolean; produ
   async function onFile(file?: File) {
     if (!file) return;
     setBusy(true);
-    try {
-      if (isLive && supabase) {
-        // live site: upload the photo to the database storage and keep its public address
-        const blob = await fileToResizedBlob(file);
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
-        const { error } = await supabase.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", cacheControl: "31536000" });
-        if (error) throw new Error("Could not upload the photo. Check your connection and that you are signed in as admin.");
-        set("image", supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl);
-      } else {
-        set("image", await fileToResizedDataUrl(file));
-      }
-    }
+    try { set("image", await preparePhoto(file)); }
     catch (e) { toast.error(e instanceof Error ? e.message : "Could not use that photo."); }
     finally { setBusy(false); if (fileRef.current) fileRef.current.value = ""; }
   }
