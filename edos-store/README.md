@@ -1,32 +1,22 @@
-# React + TypeScript + Vite
+# Edo's Clothing & Design — website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + Vite + Tailwind. Orders go to WhatsApp and are also saved in a Supabase database.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Run it
+```
+npm install
+npm run dev -- --host
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Where to edit
+- `src/data/site.ts` — phone, WhatsApp, email, address, social links
+- `src/pages/Home.tsx` — hero and About section
+- `src/assets/images/` — photos (`hero-bg.jpg`, `tailor.jpg`, `logo-emblem.png`)
+- `src/index.css` — colours (dark and light mode)
+
+## Database (Supabase)
+`.env` holds the project URL and the **public** key (safe to publish — the database rules protect the data).
+Never put the `service_role` / secret key in this project.
+- Customers: can view products and send orders.
+- Admin (`/#/admin`): signs in with a real account listed in the `admins` table; can change prices, add/hide products, upload photos, see orders.
+- If `.env` is missing, the site runs in browser-only demo mode (demo admin `admin@edos.demo`).

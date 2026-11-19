@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ExternalLink, Eye, EyeOff, Inbox, LogOut, Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
@@ -13,7 +13,8 @@ import { ProductEditor } from "@/pages/admin/ProductEditor";
 import { useAdmin } from "@/context/AdminContext";
 import { useProducts } from "@/context/ProductsContext";
 import { getCategory, type Product } from "@/data/products";
-import { deleteOrder, listOrders, updateOrderStatus, type OrderKind, type OrderRecord, type OrderStatus } from "@/lib/orders";
+import { isLive } from "@/lib/supabase";
+import { deleteOrder, loadOrders, updateOrderStatus, type OrderKind, type OrderRecord, type OrderStatus } from "@/lib/orders";
 
 /** A price box that saves when you leave it or press Enter. */
 function PriceCell({ value, prefix, onSave, label }: { value: number; prefix: string; onSave: (n: number) => void; label: string }) {
@@ -51,17 +52,23 @@ const statuses: { id: OrderStatus; label: string }[] = [
 ];
 
 export default function AdminDashboard() {
-  const { isAdmin, logout } = useAdmin();
+  const { isAdmin, checking, logout } = useAdmin();
   const { all, updateProduct, resetCatalog, lastSaveOk } = useProducts();
   const [editing, setEditing] = useState<Product | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
-  const [orders, setOrders] = useState<OrderRecord[]>(() => listOrders());
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [openOrder, setOpenOrder] = useState<string | null>(null);
 
+  const refresh = async () => setOrders(await loadOrders());
+  useEffect(() => { if (isAdmin) void refresh(); }, [isAdmin]);
+
+  if (checking) return null;
   if (!isAdmin) return <Navigate to="/admin/login" replace />;
 
-  const refresh = () => setOrders(listOrders());
-  const save = (id: string, patch: Partial<Product>) => { if (updateProduct(id, patch)) toast.success("Saved"); else toast.error("Could not save — browser storage is full."); };
+  const save = async (id: string, patch: Partial<Product>) => {
+    if (await updateProduct(id, patch)) toast.success("Saved");
+    else toast.error(isLive ? "Could not save — check your internet connection and that you are signed in as admin." : "Could not save — browser storage is full.");
+  };
   const newCount = orders.filter((o) => o.status === "new").length;
 
   return (
@@ -77,10 +84,14 @@ export default function AdminDashboard() {
       </header>
 
       <main className="container-x py-8">
-        <div className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm text-muted-foreground">
+        {isLive ? (
+          <div className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm text-muted-foreground">
+            <strong className="text-primary">Live.</strong> Price, product and photo changes are saved to the database and appear for every customer straight away. Orders sent from the website are listed under Orders &amp; requests.
+          </div>
+        ) : (<div className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm text-muted-foreground">
           <strong className="text-primary">Demo mode.</strong> Changes are saved only in this browser, so customers on other devices won't see them yet, and the orders list only shows orders placed from this browser. Real orders still arrive on WhatsApp.
-        </div>
-        {!lastSaveOk && <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive" role="alert">The last change could not be saved — the browser's storage is full. Remove unused products or use smaller photos.</p>}
+        </div>)}
+        {!lastSaveOk && <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive" role="alert">The last change could not be saved. Check your connection (and, in demo mode, that the browser's storage is not full).</p>}
 
         <Tabs defaultValue="products">
           <TabsList className="mb-6">
@@ -92,7 +103,7 @@ export default function AdminDashboard() {
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-muted-foreground">Change a price and press Enter or click away — it saves instantly. Dollar and Leones prices are separate.</p>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => { if (window.confirm("Restore the original sample products and prices? This removes your product changes.")) { resetCatalog(); toast.success("Catalogue reset"); } }}><RotateCcw className="mr-2 h-4 w-4" /> Reset catalogue</Button>
+                {!isLive && <Button variant="outline" size="sm" onClick={() => { if (window.confirm("Restore the original sample products and prices? This removes your product changes.")) { resetCatalog(); toast.success("Catalogue reset"); } }}><RotateCcw className="mr-2 h-4 w-4" /> Reset catalogue</Button>}
                 <Button size="sm" onClick={() => { setEditing(null); setEditorOpen(true); }}><Plus className="mr-2 h-4 w-4" /> Add product</Button>
               </div>
             </div>
@@ -119,6 +130,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="orders">
+            <div className="mb-4 flex justify-end"><Button variant="outline" size="sm" onClick={() => { void refresh(); }}><RotateCcw className="mr-2 h-4 w-4" /> Refresh orders</Button></div>
             {orders.length === 0 ? (
               <div className="lux-card flex flex-col items-center gap-3 px-6 py-16 text-center">
                 <Inbox className="h-10 w-10 text-gold-dim" />
@@ -138,13 +150,13 @@ export default function AdminDashboard() {
                           <p className="text-sm text-muted-foreground">{o.summary}{o.total && <span className="ml-2 font-medium text-primary">{o.total}</span>}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <Select value={o.status} onValueChange={(v) => { updateOrderStatus(o.id, v as OrderStatus); refresh(); }}>
+                          <Select value={o.status} onValueChange={async (v) => { await updateOrderStatus(o.id, v as OrderStatus); await refresh(); }}>
                             <SelectTrigger className="h-9 w-[140px]" aria-label="Order status"><SelectValue /></SelectTrigger>
                             <SelectContent>{statuses.map((s) => <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>)}</SelectContent>
                           </Select>
                           {digits.length >= 7 && <Button asChild variant="outline" size="sm"><a href={`https://wa.me/${digits}`} target="_blank" rel="noopener noreferrer"><WhatsAppIcon className="mr-1.5 h-4 w-4" /> Message</a></Button>}
                           <Button variant="ghost" size="sm" onClick={() => setOpenOrder(openOrder === o.id ? null : o.id)}>{openOrder === o.id ? "Hide" : "Details"}</Button>
-                          <Button variant="ghost" size="icon" aria-label="Delete order" className="text-muted-foreground hover:text-destructive" onClick={() => { if (window.confirm("Delete this order from the list?")) { deleteOrder(o.id); refresh(); } }}><Trash2 className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon" aria-label="Delete order" className="text-muted-foreground hover:text-destructive" onClick={async () => { if (window.confirm("Delete this order from the list?")) { await deleteOrder(o.id); await refresh(); } }}><Trash2 className="h-4 w-4" /></Button>
                         </div>
                       </div>
                       {openOrder === o.id && <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-secondary p-3 font-sans text-xs leading-relaxed text-muted-foreground">{o.details}</pre>}
